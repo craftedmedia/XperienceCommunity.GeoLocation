@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<Title>XperienceCommunity.GeoLocation</Title>
 		<Authors>Duane Gibbs</Authors>
-		<Description>This package provides basic Geo location functionality by IP address. It supports automatic mapping of Marketing Contact data by location.</Description>
+		<Description>This package provides basic Geo location functionality by IP address. It supports automatic mapping of Marketing Contact data by location, and has options for configuring alternate Geo location providers.</Description>
 		<PackageTags>xperience;kentico;aspnetcore;geolocation;ip</PackageTags>
 		<PackageId>XperienceCommunity.GeoLocation</PackageId>
 		<RepositoryType>git</RepositoryType>
