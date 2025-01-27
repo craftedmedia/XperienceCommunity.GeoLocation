@@ -1,4 +1,6 @@
-﻿using IPinfo;
+﻿using CMS.Core;
+
+using IPinfo;
 using IPinfo.Models;
 
 using XperienceCommunity.GeoLocation.Models;
@@ -13,16 +15,19 @@ internal class IPinfoGeoLocationService : IGeoLocationService
 {
     private readonly IPinfoClient ipInfoClient;
     private readonly IPAddressHelper ipAddressHelper;
+    private readonly IEventLogService eventLogService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IPinfoGeoLocationService"/> class.
     /// </summary>
     /// <param name="ipInfoClient">Instance of the <see cref="IPinfoClient"/>.</param>
     /// <param name="ipAddressHelper">Instance of <see cref="IPAddressHelper"/>.</param>
-    public IPinfoGeoLocationService(IPinfoClient ipInfoClient, IPAddressHelper ipAddressHelper)
+    /// <param name="eventLogService">Instance of <see cref="IEventLogService"/>.</param>
+    public IPinfoGeoLocationService(IPinfoClient ipInfoClient, IPAddressHelper ipAddressHelper, IEventLogService eventLogService)
     {
         this.ipInfoClient = ipInfoClient;
         this.ipAddressHelper = ipAddressHelper;
+        this.eventLogService = eventLogService;
     }
 
     /// <summary>
@@ -95,15 +100,33 @@ internal class IPinfoGeoLocationService : IGeoLocationService
 
     private IPResponse? GetResponse(string? ip = null)
     {
-        ip ??= ipAddressHelper.GetCurrentIP();
+        try
+        {
+            ip ??= ipAddressHelper.GetCurrentIP();
 
-        return ipInfoClient.IPApi.GetDetails(ip);
+            return ipInfoClient.IPApi.GetDetails(ip);
+        }
+        catch (HttpRequestException exc) when (exc.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+        {
+            eventLogService.LogWarning(nameof(IPinfoGeoLocationService), nameof(this.GetResponseAsync), $"Cannot retrieve IP location data due to request throttling imposed by IPinfo service. Error: {exc.Message}");
+
+            return null;
+        }
     }
 
     private async Task<IPResponse?> GetResponseAsync(string? ip = null)
     {
-        ip ??= ipAddressHelper.GetCurrentIP();
+        try
+        {
+            ip ??= ipAddressHelper.GetCurrentIP();
 
-        return await ipInfoClient.IPApi.GetDetailsAsync(ip);
+            return await ipInfoClient.IPApi.GetDetailsAsync(ip);
+        }
+        catch (HttpRequestException exc) when (exc.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+        {
+            eventLogService.LogWarning(nameof(IPinfoGeoLocationService), nameof(this.GetResponseAsync), $"Cannot retrieve IP location data due to request throttling imposed by IPinfo service. Error: {exc.Message}");
+
+            return null;
+        }
     }
 }
