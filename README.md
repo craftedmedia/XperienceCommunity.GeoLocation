@@ -153,6 +153,8 @@ The package automatically maps Geo location data to the current marketing contac
 <sub>* Only when using `MaxMind`</sub>
 <sub>** If using `MaxMind`, only when providing an Asn Db</sub>
 
+Note that mapping of contact data is **only performed if the contact has accepted at *least* `Visitor` level cookies**. If the cookie level is below `Visitor` then the system will not attempt to map location data.
+
 You can disable this feature by setting `UseGeoLocationForContacts` to false in `appsettings.json`, e.g:
 ```
 "XperienceGeoLocation": {
