@@ -135,6 +135,12 @@ public class HomePageController : Controller
 }
 ```
 
+These service methods provide an optional `ip` address parameter which can be used to override the IP address of the current user/request, e.g:
+
+```
+var location = await this.geoLocationService.GetCurrentLocationAsync("127.0.0.1");
+```
+
 ### Map Geo location data to contacts
 The package automatically maps Geo location data to the current marketing contact, setting the following fields:
 
