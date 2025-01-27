@@ -88,7 +88,7 @@ If you've downloaded a paid database, you may need to configure the database nam
 }
 ```
 ### IPinfo provider
-To use `IPinfo` specify it as the designated provider via `appsettings.json`:
+To use the `IPinfo` service, specify it as the designated provider via `appsettings.json`:
 
 ```
 "XperienceGeoLocation": {
