@@ -108,7 +108,7 @@ And provide an `AccessToken` in the provider settings:
 You can obtain an access token by signing up for a free account at [IPinfo](https://ipinfo.io/), and then generate an [access token](https://ipinfo.io/account/token) to be used.
 
 ### Geo location service
-The package provides an `IGeoLocation` service which can be used to retrieve the location data of the current user based on IP address.
+The package provides an `IGeoLocation` service which can be used to retrieve location data for the current user based on IP address.
 
 Example:
 
