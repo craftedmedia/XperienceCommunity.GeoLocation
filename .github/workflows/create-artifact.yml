@@ -1,0 +1,49 @@
+name: Create Artifact
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  create_artifact:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.1.11
+        with:
+          versionSpec: '6.0.x'
+
+      - name: Determine Version
+        id: version_step
+        uses: gittools/actions/gitversion/execute@v3.1.11
+        with:
+          updateAssemblyInfo: true
+
+      - run: |
+          echo "Version : ${{ steps.version_step.outputs.MajorMinorPatch }}"
+        name: Display version
+          
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+        
+      - name: Pack NuGet package
+        run: dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${{ steps.version_step.outputs.MajorMinorPatch }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./nupkg/*.nupkg
