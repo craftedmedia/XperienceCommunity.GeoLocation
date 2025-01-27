@@ -13,11 +13,7 @@ public class OrganizationData
     /// Initializes a new instance of the <see cref="OrganizationData"/> class.
     /// </summary>
     /// <param name="response"><see cref="AsnResponse"/> to populate organization from.</param>
-    public OrganizationData(AsnResponse response)
-    {
-        OrganizationName = response.AutonomousSystemOrganization;
-        OrganizationNumber = response.AutonomousSystemNumber;
-    }
+    public OrganizationData(AsnResponse response) => OrganizationName = response.AutonomousSystemOrganization;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OrganizationData"/> class.
@@ -29,9 +25,4 @@ public class OrganizationData
     /// Gets or sets the organization name.
     /// </summary>
     public string? OrganizationName { get; set; }
-
-    /// <summary>
-    /// Gets or sets the organization number.
-    /// </summary>
-    public long? OrganizationNumber { get; set; }
 }

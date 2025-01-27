@@ -69,7 +69,7 @@ internal class IPinfoGeoLocationService : IGeoLocationService
     /// </summary>
     /// <param name="ip">Optional IP address. If not provided, uses current request IP.</param>
     /// <returns>Organization data.</returns>
-    public OrganizationData? GetOrganizationData(string? ip = null)
+    public OrganizationData? GetOrganization(string? ip = null)
     {
         var response = GetResponse(ip);
 
@@ -86,7 +86,7 @@ internal class IPinfoGeoLocationService : IGeoLocationService
     /// </summary>
     /// <param name="ip">Optional IP address. If not provided, uses current request IP.</param>
     /// <returns>Organization data.</returns>
-    public async Task<OrganizationData?> GetOrganizationDataAsync(string? ip = null)
+    public async Task<OrganizationData?> GetOrganizationAsync(string? ip = null)
     {
         var response = await GetResponseAsync(ip);
 
@@ -108,7 +108,7 @@ internal class IPinfoGeoLocationService : IGeoLocationService
         }
         catch (HttpRequestException exc) when (exc.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
         {
-            eventLogService.LogWarning(nameof(IPinfoGeoLocationService), nameof(this.GetResponseAsync), $"Cannot retrieve IP location data due to request throttling imposed by IPinfo service. Error: {exc.Message}");
+            eventLogService.LogWarning(nameof(IPinfoGeoLocationService), nameof(this.GetResponse), $"Cannot retrieve IP location data due to request throttling imposed by IPinfo service. Error: {exc.Message}");
 
             return null;
         }

@@ -61,7 +61,7 @@ internal class ContactGeoLocationMappingService
             return;
         }
 
-        var organization = geoLocationService.GetOrganizationData();
+        var organization = geoLocationService.GetOrganization();
 
         if (organization is null)
         {

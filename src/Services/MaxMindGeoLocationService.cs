@@ -135,7 +135,7 @@ internal class MaxMindGeoLocationService : IGeoLocationService, IDisposable
     /// </summary>
     /// <param name="ip">Optional IP address. If not provided, uses current request IP.</param>
     /// <returns>Organization data.</returns>
-    public OrganizationData? GetOrganizationData(string? ip = null)
+    public OrganizationData? GetOrganization(string? ip = null)
     {
         if (AsnDatabaseReader is null)
         {
@@ -157,7 +157,7 @@ internal class MaxMindGeoLocationService : IGeoLocationService, IDisposable
 
                return new OrganizationData(response);
            },
-           new CacheSettings(cacheMinutes: 20, nameof(MaxMindGeoLocationService), nameof(this.GetOrganizationData), ip));
+           new CacheSettings(cacheMinutes: 20, nameof(MaxMindGeoLocationService), nameof(this.GetOrganization), ip));
     }
 
     /// <summary>

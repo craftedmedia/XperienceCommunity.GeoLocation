@@ -28,7 +28,7 @@ public interface IGeoLocationService
     /// </summary>
     /// <param name="ip">Optional IP address. If not provided, uses current request IP.</param>
     /// <returns>Organization data.</returns>
-    OrganizationData? GetOrganizationData(string? ip = null);
+    OrganizationData? GetOrganization(string? ip = null);
 
     /// <summary>
     /// Gets organization data for the current user.
@@ -36,6 +36,6 @@ public interface IGeoLocationService
     /// <param name="ip">Optional IP address. If not provided, uses current request IP.</param>
     /// <returns>Organization data.</returns>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    async Task<OrganizationData?> GetOrganizationDataAsync(string? ip = null) => GetOrganizationData(ip);
+    async Task<OrganizationData?> GetOrganizationAsync(string? ip = null) => GetOrganization(ip);
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 }
