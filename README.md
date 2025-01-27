@@ -128,7 +128,7 @@ public class HomePageController : Controller
         var location = await this.geoLocationService.GetCurrentLocationAsync();
 
         // Fetch organization data
-        var org = await this.geoLocationService.GetOrganizationDataAsync();
+        var org = await this.geoLocationService.GetOrganizationAsync();
 
         return new TemplateResult();
     }
