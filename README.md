@@ -168,6 +168,8 @@ You can disable this feature by setting `UseGeoLocationForContacts` to false in 
 
 Note that **mapping of location data happens only once for a given contact**, once it has been mapped, location data **will not be re-mapped** on subsequent visits e.g. from a different geographical location.
 
+Whether the contact is mapped is controlled by a custom `XperienceGeoLocation_IsContactMapped` field which is stored against the `OM.Contact` class. You can force re-mapping of all contacts by deleting this field and letting the system recreate it.
+
 ### Custom Contact mapping logic
 It's possible to inject your own mapping logic into the Contact mapping middleware. This will be useful in situations where you need to map additional Contact data (e.g. custom fields), or change the default mapping behaviour.
 
