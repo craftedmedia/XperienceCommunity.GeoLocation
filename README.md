@@ -58,7 +58,10 @@ And that should be enough to get going. Read on for more info.
 
 ## Full Instructions
 ### Providers
-This package allows for Geo location via [MaxMind](https://www.maxmind.com/en/home) or [IPinfo](https://ipinfo.io/). You will need to provide either a free or paid City/Asn database if using `MaxMind`, or a free or paid Access Token if using `IPinfo`. Read on for details on configuring each provider.
+This package allows for Geo location via [MaxMind](https://www.maxmind.com/en/home) or [IPinfo](https://ipinfo.io/) services. You'll need to provide either a free or paid City/Asn database if using `MaxMind`, or a free or paid Access Token if using `IPinfo`.
+
+Read on for details on configuring each provider.
+
 ### MaxMind provider
 
 To use `MaxMind` specify it as the designated provider via `appsettings.json`:
