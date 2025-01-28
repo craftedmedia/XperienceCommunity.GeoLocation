@@ -165,6 +165,34 @@ You can disable this feature by setting `UseGeoLocationForContacts` to false in 
 
 Note that **mapping of location data happens only once for a given contact**, once it has been mapped, location data **will not be re-mapped** on subsequent visits e.g. from a different geographical location.
 
+### Custom Contact mapping logic
+It's possible to inject your own mapping logic into the Contact mapping middleware. This will be useful in situations where you need to map additional Contact data (e.g. custom fields), or change the default mapping behaviour.
+
+To do this, you must provide an implementation of `ICustomContactMappingProvider`:
+
+```
+public class CustomContactMappingProvider : ICustomContactMappingProvider
+{
+    private readonly IGeoLocationService geoLocationService;
+
+    public CustomContactMappingProvider(IGeoLocationService geoLocationService) => this.geoLocationService = geoLocationService;
+   
+    public void MapContactData(ContactInfo currentContact)
+    {
+        // Do something with the current contact and location data...
+        var location = this.geoLocationService.GetCurrentLocation();
+
+        currentContact.SetValue("ContactTimeZone", location.TimeZone);
+    }
+}
+```
+
+And then register it as a scoped service in your DI container:
+
+`builder.Services.AddScoped<ICustomContactMappingProvider, CustomContactMappingProvider>();`
+
+The custom `MapContactData` method will now be called as part of the contact mapping pipeline.
+
 ### Full configuration
 See below for a list of all possible configuration options:
 
