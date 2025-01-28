@@ -3,6 +3,7 @@ using CMS.Helpers;
 
 using Microsoft.AspNetCore.Http;
 
+using XperienceCommunity.GeoLocation.Providers;
 using XperienceCommunity.GeoLocation.Services;
 
 namespace XperienceCommunity.GeoLocation.Middleware;
@@ -34,8 +35,9 @@ internal class ContactGeoLocationMiddleware
     /// </summary>
     /// <param name="context">Instance of the current <see cref="HttpContext"/>.</param>
     /// <param name="contactGeoLocationMappingService">Instance of the <see cref="ContactGeoLocationMappingService"/>.</param>
+    /// <param name="provider">Instance of the <see cref="ICustomContactMappingProvider"/>.</param>
     /// <returns>Task.</returns>
-    public async Task InvokeAsync(HttpContext context, ContactGeoLocationMappingService contactGeoLocationMappingService)
+    public async Task InvokeAsync(HttpContext context, ContactGeoLocationMappingService contactGeoLocationMappingService, ICustomContactMappingProvider provider)
     {
         // Mapping contact location not required, skip.
         if (!geoLocationOptions.UseGeoLocationForContacts)
@@ -79,6 +81,9 @@ internal class ContactGeoLocationMiddleware
         // Perform lookup / mappings.
         contactGeoLocationMappingService.MapGeoLocationFieldsToContact(contact);
         contactGeoLocationMappingService.MapGeoOrganizationFieldsToContact(contact);
+
+        // Perform user supplied mappings.
+        provider.MapContactData(contact);
 
         contact.Update();
 

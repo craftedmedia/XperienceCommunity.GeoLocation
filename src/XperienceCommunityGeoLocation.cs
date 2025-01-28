@@ -3,9 +3,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using XperienceCommunity.GeoLocation.Middleware;
+using XperienceCommunity.GeoLocation.Providers;
 using XperienceCommunity.GeoLocation.Services;
+using XperienceCommunity.GeoLocation.Services.IPinfo;
+using XperienceCommunity.GeoLocation.Services.MaxMind;
 using XperienceCommunity.GeoLocation.Utilities;
 
 using static XperienceCommunity.GeoLocation.XperienceCommunityGeoLocationOptions;
@@ -30,6 +34,7 @@ public static class XperienceCommunityGeoLocation
         services.AddSingleton(options);
         services.AddScoped<IPAddressHelper>();
         services.AddScoped<ContactGeoLocationMappingService>();
+        services.TryAddScoped<ICustomContactMappingProvider, NoOpContactMappingProvider>();
 
         switch (options.Provider)
         {
@@ -64,7 +69,11 @@ public static class XperienceCommunityGeoLocation
         return app;
     }
 
-    private static void ConfigureMaxMind(IServiceCollection services) => services.AddScoped<IGeoLocationService, MaxMindGeoLocationService>();
+    private static void ConfigureMaxMind(IServiceCollection services)
+    {
+        services.AddSingleton<MaxMindDbContext>();
+        services.AddScoped<IGeoLocationService, MaxMindGeoLocationService>();
+    }
 
     private static void ConfigureIPInfo(IServiceCollection services, XperienceCommunityGeoLocationOptions options)
     {

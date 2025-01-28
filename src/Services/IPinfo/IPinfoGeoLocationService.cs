@@ -6,7 +6,7 @@ using IPinfo.Models;
 using XperienceCommunity.GeoLocation.Models;
 using XperienceCommunity.GeoLocation.Utilities;
 
-namespace XperienceCommunity.GeoLocation.Services;
+namespace XperienceCommunity.GeoLocation.Services.IPinfo;
 
 /// <summary>
 /// IP info geo location service.
