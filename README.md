@@ -194,7 +194,7 @@ And then register it as a scoped service in your DI container:
 
 `builder.Services.AddScoped<ICustomContactMappingProvider, CustomContactMappingProvider>();`
 
-The custom `MapContactData` method will now be called as part of the contact mapping pipeline.
+The custom `MapContactDataAsync` method will now be called as part of the contact mapping pipeline.
 
 ### Full configuration
 See below for a list of all possible configuration options:
