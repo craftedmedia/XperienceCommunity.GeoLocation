@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 using XperienceCommunity.GeoLocation.Providers;
 using XperienceCommunity.GeoLocation.Services;
+using XperienceCommunity.GeoLocation.Utilities;
 
 namespace XperienceCommunity.GeoLocation.Middleware;
 
@@ -70,11 +71,8 @@ internal class ContactGeoLocationMiddleware
             return;
         }
 
-        // Don't perform geo location if the contact is older 15 secs (arbitrary value to avoid repeated mappings).
-        double contactCreateMaxAge = -15;
-
-        if (contact.ContactCreated <= DateTime.Now.AddSeconds(contactCreateMaxAge) &&
-            contact.ContactCreated != DateTimeHelper.ZERO_TIME)
+        // Don't perform geo location if the contact has already been mapped.
+        if (contact.GetBooleanValue(ContactClassInfoHelper.ContactMappedColumnName, false))
         {
             await next(context);
             return;
@@ -87,6 +85,7 @@ internal class ContactGeoLocationMiddleware
         // Perform user supplied mappings.
         await provider.MapContactDataAsync(contact);
 
+        contact.SetValue(ContactClassInfoHelper.ContactMappedColumnName, true);
         contact.Update();
 
         await next(context);

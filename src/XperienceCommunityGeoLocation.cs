@@ -64,6 +64,8 @@ public static class XperienceCommunityGeoLocation
     /// <returns><see cref="IApplicationBuilder"/>.</returns>
     public static IApplicationBuilder UseXperienceGeoLocation(this IApplicationBuilder app)
     {
+        ContactClassInfoHelper.EnsureContactMappedField();
+
         app.UseMiddleware<ContactGeoLocationMiddleware>();
 
         return app;
