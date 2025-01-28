@@ -70,8 +70,10 @@ internal class ContactGeoLocationMiddleware
             return;
         }
 
-        // Don't perform geo location if the contact is older than a min (avoid repeated lookups).
-        if (contact.ContactCreated <= DateTime.Now.AddMinutes(-1) &&
+        // Don't perform geo location if the contact is older 15 secs (arbitrary value to avoid repeated mappings).
+        double contactCreateMaxAge = -15;
+
+        if (contact.ContactCreated <= DateTime.Now.AddSeconds(contactCreateMaxAge) &&
             contact.ContactCreated != DateTimeHelper.ZERO_TIME)
         {
             await next(context);
