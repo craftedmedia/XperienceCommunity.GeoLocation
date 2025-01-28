@@ -11,7 +11,9 @@ internal class NoOpContactMappingProvider : ICustomContactMappingProvider
     /// Maps additional contact data.
     /// </summary>
     /// <param name="currentContact">Instance of the current contact.</param>
-    public void MapContactData(ContactInfo currentContact)
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+    public async Task MapContactDataAsync(ContactInfo currentContact)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         // No-op.
     }

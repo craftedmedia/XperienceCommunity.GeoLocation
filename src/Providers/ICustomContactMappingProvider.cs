@@ -11,5 +11,5 @@ public interface ICustomContactMappingProvider
     /// Maps additional contact data.
     /// </summary>
     /// <param name="currentContact">Instance of the current contact.</param>
-    void MapContactData(ContactInfo currentContact);
+    Task MapContactDataAsync(ContactInfo currentContact);
 }

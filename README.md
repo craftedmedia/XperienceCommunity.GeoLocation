@@ -177,10 +177,10 @@ public class CustomContactMappingProvider : ICustomContactMappingProvider
 
     public CustomContactMappingProvider(IGeoLocationService geoLocationService) => this.geoLocationService = geoLocationService;
    
-    public void MapContactData(ContactInfo currentContact)
+    public async Task MapContactDataAsync(ContactInfo currentContact)
     {
         // Do something with the current contact and location data...
-        var location = this.geoLocationService.GetCurrentLocation();
+        var location = await this.geoLocationService.GetCurrentLocationAsync();
 
         currentContact.SetValue("ContactTimeZone", location.TimeZone);
     }

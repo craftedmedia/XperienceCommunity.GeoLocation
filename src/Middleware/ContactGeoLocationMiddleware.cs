@@ -83,7 +83,7 @@ internal class ContactGeoLocationMiddleware
         contactGeoLocationMappingService.MapGeoOrganizationFieldsToContact(contact);
 
         // Perform user supplied mappings.
-        provider.MapContactData(contact);
+        await provider.MapContactDataAsync(contact);
 
         contact.Update();
 
