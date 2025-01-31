@@ -78,7 +78,10 @@ And provide a City database (required) and optionally, an Asn database in the fo
 
 You can obtain a MaxMind db by signing up here: https://www.maxmind.com/en/geolite2/signup
 
-Once you've signed up, download a free (or paid) database and place it in the aforementioned directory and ensure that the databases are copied to the output directory when deploying, e.g edit csproj to include:
+Once you've signed up, download a free (or paid) database and place it in the aforementioned directory.
+
+#### Deployment
+You must ensure that the MaxMind databases are copied to the output directory when deploying, e.g edit csproj to include:
 
 ```
 <ItemGroup>
@@ -90,7 +93,7 @@ Once you've signed up, download a free (or paid) database and place it in the af
   </None>
 </ItemGroup>
 ```
-
+#### Paid databases
 If you've downloaded a paid database, you may need to configure the database name(s) by passing these in as options:
 ```
 "XperienceGeoLocation": {
@@ -101,6 +104,7 @@ If you've downloaded a paid database, you may need to configure the database nam
   }
 }
 ```
+This overrides the default (free db) names.
 
 ### IPinfo provider
 To use the `IPinfo` service, specify it as the designated provider via `appsettings.json`:
@@ -177,7 +181,7 @@ You can disable this feature by setting `UseGeoLocationForContacts` to false in 
   "UseGeoLocationForContacts": false
 }
 ```
-
+#### Re-mapping of contacts
 Note that **mapping of location data happens only once for a given contact**, once it has been mapped, location data **will not be re-mapped** on subsequent visits e.g. from a different geographical location.
 
 Whether the contact is mapped is controlled by a custom `XperienceGeoLocation_IsContactMapped` field which is stored against the `OM.Contact` class. You can force re-mapping of all contacts by deleting this field and letting the system recreate it.
