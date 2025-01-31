@@ -78,7 +78,18 @@ And provide a City database (required) and optionally, an Asn database in the fo
 
 You can obtain a MaxMind db by signing up here: https://www.maxmind.com/en/geolite2/signup
 
-Once you've signed up, download a free (or paid) database and place it in the aforementioned directory.
+Once you've signed up, download a free (or paid) database and place it in the aforementioned directory and ensure that the databases are copied to the output directory when deploying, e.g edit csproj to include:
+
+```
+<ItemGroup>
+  <None Update="App_Data\MaxMind\Db\GeoLite2-ASN.mmdb">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
+  <None Update="App_Data\MaxMind\Db\GeoLite2-City.mmdb">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+```
 
 If you've downloaded a paid database, you may need to configure the database name(s) by passing these in as options:
 ```
@@ -90,6 +101,7 @@ If you've downloaded a paid database, you may need to configure the database nam
   }
 }
 ```
+
 ### IPinfo provider
 To use the `IPinfo` service, specify it as the designated provider via `appsettings.json`:
 
