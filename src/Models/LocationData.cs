@@ -2,6 +2,10 @@
 
 using MaxMind.GeoIP2.Responses;
 
+using Microsoft.AspNetCore.Http;
+
+using XperienceCommunity.GeoLocation.Utilities;
+
 namespace XperienceCommunity.GeoLocation.Models;
 
 /// <summary>
@@ -49,6 +53,22 @@ public class LocationData
         {
             Longitude = lng;
         }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocationData"/> class.
+    /// </summary>
+    /// <param name="cfRequest"><see cref="HttpRequest"/> to populate location from.</param>
+    public LocationData(HttpRequest cfRequest)
+    {
+        CountryCode = RequestHelper.ParseHeaderValue(cfRequest.Headers, "cf-ipcountry");
+        RegionCode = RequestHelper.ParseHeaderValue(cfRequest.Headers, "cf-region-code");
+        Region = RequestHelper.ParseHeaderValue(cfRequest.Headers, "cf-region");
+        City = RequestHelper.ParseHeaderValue(cfRequest.Headers, "cf-ipcity");
+        PostCode = RequestHelper.ParseHeaderValue(cfRequest.Headers, "cf-postal-code");
+        TimeZone = RequestHelper.ParseHeaderValue(cfRequest.Headers, "cf-timezone");
+        Latitude = RequestHelper.ParseHeaderValue<double>(cfRequest.Headers, "cf-iplatitude");
+        Longitude = RequestHelper.ParseHeaderValue<double>(cfRequest.Headers, "cf-iplongitude");
     }
 
     /// <summary>

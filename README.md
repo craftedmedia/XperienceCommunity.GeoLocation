@@ -58,7 +58,13 @@ And that should be enough to get going. Read on for more info.
 
 ## Full Instructions
 ### Providers
-This package allows for Geo location via [MaxMind](https://www.maxmind.com/en/home) or [IPinfo](https://ipinfo.io/) services. You'll need to provide either a free or paid City/Asn database if using `MaxMind`, or a free or paid Access Token if using `IPinfo`.
+This package allows for Geo location via [MaxMind](https://www.maxmind.com/en/home), [IPinfo](https://ipinfo.io/) or [Cloudflare IP geolocation](https://developers.cloudflare.com/network/ip-geolocation/) services.
+
+You'll need to:
+
+- Provide a free or paid City/Asn database if using `MaxMind`
+- Provide a free or paid Access Token if using `IPinfo`
+- Configure [visitor location headers](https://developers.cloudflare.com/rules/transform/managed-transforms/reference/#add-visitor-location-headers) managed transform if using `Cloudflare`
 
 Read on for details on configuring each provider.
 
@@ -124,7 +130,20 @@ And provide an `AccessToken` in the provider settings:
 }
 ```
 
-You can obtain an access token by signing up for a free account at [IPinfo](https://ipinfo.io/), and then generate an [access token](https://ipinfo.io/account/token) to be used.
+### Cloudflare provider
+To use the `Cloudflare` IP geolocation feature, specify it as the designated provider via `appsettings.json`:
+
+```
+"XperienceGeoLocation": {
+  "Provider": "Cloudflare"
+}
+```
+And enable the ['Add visitor location headers'](https://developers.cloudflare.com/rules/transform/managed-transforms/reference/#add-visitor-location-headers) Managed Transform in Cloudflare.
+
+You can read more about Cloudflares IP geolocation service [here](https://developers.cloudflare.com/network/ip-geolocation/).
+
+#### ASN/Organizational data
+Cloudflares geolocation feature does not provide ASN/Organizational data. If you need access to this information you should use the `MaxMind` provider instead.
 
 ### Geo location service
 The package provides an `IGeoLocation` service which can be used to retrieve location data for the current user based on IP address.
@@ -219,10 +238,10 @@ See below for a list of all possible configuration options:
 
 | Option               | Description                                                                                                                                                                 | Example                                                           | Default    |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------- |
-| `Provider` | Specify the desired geo location provider. Possible values are `MaxMind` or `IPinfo`.                                                                                                                             | `"IPinfo"`                                                 | `"MaxMind"`
+| `Provider` | Specify the desired geo location provider. Possible values are `MaxMind`, `IPinfo`, or `Cloudflare`.                                                                                                                             | `"IPinfo"`                                                 | `"MaxMind"`
 | `UseGeoLocationForContacts` | A value indicating whether to perform automatic mapping of geo location data to the current marketing contact.                                                                                                                            | `"false"`                                                 | `"true"`
 | `ContactGeoLocationSuffix` | Provides a suffix which is appended to any geo located field values against the marketing contact.                                                                                                                     | `"(FooSuffix)"`                                                 | `"(Geolocation)"`
-| `LocalIpOverride`| Allows for overriding the IP address of the current user. Useful for local testing purposes.                                                                                                                            | `"127.0.0.1"`                                                 | `null`
+| `LocalIpOverride`| Allows for overriding the IP address of the current user. Useful for local testing purposes. **Doesn't apply when using the `Cloudflare` provider.*                                                                                                                            | `"127.0.0.1"`                                                 | `null`
 | `MaxMind.MaxMindGeoIPCityDbFileName`| Allows overriding of the default IP city database name. May be required if using a paid database.                                                                                                                            | `"GeoIP2-City.mmdb"`                                                 | `GeoLite2-City.mmdb`
 | `MaxMind.MaxMindGeoIPAsnDbFileName` | Allows overriding of the default IP Asn database name. May be required if using a paid database.                                                                                                                            | `"GeoIP2-Asn.mmdb"`                                                 | `GeoLite2-ASN.mmdb`
 | `IPinfo.AccessToken` | Specifies the access token used to authenticate with `IPinfo` services.                                                                                                                          | `"12345abcdef"`                                                 | `null`

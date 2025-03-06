@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using XperienceCommunity.GeoLocation.Middleware;
 using XperienceCommunity.GeoLocation.Providers;
 using XperienceCommunity.GeoLocation.Services;
+using XperienceCommunity.GeoLocation.Services.Cloudflare;
 using XperienceCommunity.GeoLocation.Services.IPinfo;
 using XperienceCommunity.GeoLocation.Services.MaxMind;
 using XperienceCommunity.GeoLocation.Utilities;
@@ -34,6 +35,7 @@ public static class XperienceCommunityGeoLocation
         services.AddSingleton(options);
         services.AddScoped<IPAddressHelper>();
         services.AddScoped<ContactGeoLocationMappingService>();
+        services.AddSingleton<CountryInfoLookupService>();
         services.TryAddScoped<ICustomContactMappingProvider, NoOpContactMappingProvider>();
 
         switch (options.Provider)
@@ -48,6 +50,12 @@ public static class XperienceCommunityGeoLocation
             case GeoLocationProvider.IPinfo:
 
                 ConfigureIPInfo(services, options);
+
+                break;
+
+            case GeoLocationProvider.Cloudflare:
+
+                ConfigureCloudflare(services);
 
                 break;
         }
@@ -91,4 +99,6 @@ public static class XperienceCommunityGeoLocation
         services.AddSingleton(client);
         services.AddScoped<IGeoLocationService, IPinfoGeoLocationService>();
     }
+
+    private static void ConfigureCloudflare(IServiceCollection services) => services.AddScoped<IGeoLocationService, CloudflareGeoLocationService>();
 }
