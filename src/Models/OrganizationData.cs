@@ -12,6 +12,13 @@ public class OrganizationData
     /// <summary>
     /// Initializes a new instance of the <see cref="OrganizationData"/> class.
     /// </summary>
+    public OrganizationData()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OrganizationData"/> class.
+    /// </summary>
     /// <param name="response"><see cref="AsnResponse"/> to populate organization from.</param>
     public OrganizationData(AsnResponse response) => OrganizationName = response.AutonomousSystemOrganization;
 
