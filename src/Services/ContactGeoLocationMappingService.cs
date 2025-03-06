@@ -1,5 +1,4 @@
 ﻿using CMS.ContactManagement;
-using CMS.Globalization;
 using CMS.Helpers;
 
 namespace XperienceCommunity.GeoLocation.Services;
@@ -12,6 +11,7 @@ internal class ContactGeoLocationMappingService
     private readonly IGeoLocationService geoLocationService;
     private readonly XperienceCommunityGeoLocationOptions geoLocationOptions;
     private readonly IProgressiveCache progressiveCache;
+    private readonly CountryInfoLookupService countryInfoLookupService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ContactGeoLocationMappingService"/> class.
@@ -19,11 +19,13 @@ internal class ContactGeoLocationMappingService
     /// <param name="geoLocationService">Instance of the <see cref="IGeoLocationService"/>.</param>
     /// <param name="geoLocationOptions">Instance of the <see cref="XperienceCommunityGeoLocationOptions"/>.</param>
     /// <param name="progressiveCache">Instance of the <see cref="IProgressiveCache"/>.</param>
-    public ContactGeoLocationMappingService(IGeoLocationService geoLocationService, XperienceCommunityGeoLocationOptions geoLocationOptions, IProgressiveCache progressiveCache)
+    /// <param name="countryInfoLookupService">Instance of the <see cref="CountryInfoLookupService"/>.</param>
+    public ContactGeoLocationMappingService(IGeoLocationService geoLocationService, XperienceCommunityGeoLocationOptions geoLocationOptions, IProgressiveCache progressiveCache, CountryInfoLookupService countryInfoLookupService)
     {
         this.geoLocationService = geoLocationService;
         this.geoLocationOptions = geoLocationOptions;
         this.progressiveCache = progressiveCache;
+        this.countryInfoLookupService = countryInfoLookupService;
     }
 
     /// <summary>
@@ -44,8 +46,12 @@ internal class ContactGeoLocationMappingService
             return;
         }
 
-        contact.ContactCountryID = GetCountryId(location.CountryCode);
-        contact.ContactStateID = GetStateId(location.RegionCode);
+        var countryData = countryInfoLookupService.GetKenticoCountryData(location.CountryCode);
+        int stateId = countryInfoLookupService.GetStateId(location.RegionCode);
+
+        contact.ContactCountryID = countryData?.CountryID ?? -1;
+        contact.ContactStateID = stateId;
+
         contact.ContactCity = AppendGeoLocationSuffix(location.City);
         contact.ContactZIP = AppendGeoLocationSuffix(location.PostCode);
     }
@@ -69,54 +75,6 @@ internal class ContactGeoLocationMappingService
         }
 
         contact.ContactCompanyName = AppendGeoLocationSuffix(organization.OrganizationName);
-    }
-
-    private int GetStateId(string? regionCode)
-    {
-        if (string.IsNullOrWhiteSpace(regionCode))
-        {
-            return -1;
-        }
-
-        return progressiveCache.Load(
-          (cs) =>
-          {
-              var info = StateInfoProvider.GetStateInfoByCode(regionCode);
-
-              if (info is null)
-              {
-                  cs.Cached = false;
-                  cs.CacheMinutes = 0;
-                  return -1;
-              }
-
-              return info.StateID;
-          },
-          new CacheSettings(cacheMinutes: 20, nameof(ContactGeoLocationMappingService), nameof(this.GetStateId), regionCode));
-    }
-
-    private int GetCountryId(string? countryCode)
-    {
-        if (string.IsNullOrWhiteSpace(countryCode))
-        {
-            return -1;
-        }
-
-        return progressiveCache.Load(
-          (cs) =>
-          {
-              var info = CountryInfoProvider.GetCountryInfoByCode(countryCode);
-
-              if (info is null)
-              {
-                  cs.Cached = false;
-                  cs.CacheMinutes = 0;
-                  return -1;
-              }
-
-              return info.CountryID;
-          },
-          new CacheSettings(cacheMinutes: 20, nameof(ContactGeoLocationMappingService), nameof(this.GetCountryId), countryCode));
     }
 
     private string AppendGeoLocationSuffix(string? data)

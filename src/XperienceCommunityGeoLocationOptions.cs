@@ -19,6 +19,11 @@ public class XperienceCommunityGeoLocationOptions
         /// IP info geo location service.
         /// </summary>
         IPinfo,
+
+        /// <summary>
+        /// Cloudflare request headers.
+        /// </summary>
+        Cloudflare,
     }
 
     /// <summary>
